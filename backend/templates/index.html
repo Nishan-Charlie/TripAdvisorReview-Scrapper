@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hotel Reviews</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+<div class="container">
+    <h1 class="mt-3">Hotel Reviews</h1>
+    <form method="POST">
+        <div class="form-group">
+            <label for="hotel_names">Enter Hotel Names (comma-separated):</label>
+            <input type="text" class="form-control" id="hotel_names" name="hotel_names">
+        </div>
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+
+    {% if hotel_reviews %}
+        {% for hotel_name, reviews in hotel_reviews %}
+            <h2 class="mt-3">Hotel: {{ hotel_name }}</h2>
+            <h3 class="mt-3">Reviews:</h3>
+            <ul class="list-unstyled">
+                {% for review in reviews %}
+                    <li class="border-bottom pb-3 mb-3">
+                        <div class="d-flex align-items-center mb-2">
+                            <img src="{{ review.user.avatar }}" alt="User Avatar" class="img-thumbnail rounded-circle" width="70">
+                            <div class="ml-2">
+                                <p class="mb-0">{{ review.user.username }}</p>
+                                <p class="mb-0">{{ review.user.user_location }}</p>
+                            </div>
+                        </div>
+                        <h4>{{ review.title }}</h4>
+                        <p class="mb-2">Rating: {{ review.rating }}/5 <span class="text-warning">
+                            {% for _ in range(review.rating) %}
+                                &#9733;
+                            {% endfor %}
+                            {% for _ in range(5 - review.rating) %}
+                                &#9734;
+                            {% endfor %}
+                        </span></p>
+                        <p>{{ review.text }}</p>
+                        <p class="mb-2">Travel Date: {{ review.travel_date }}</p>
+                        <a href="{{ review.url }}" class="btn btn-secondary btn-sm" target="_blank">Read more</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endfor %}
+    {% else %}
+        <p class="mt-3">No reviews found or an error occurred.</p>
+    {% endif %}
+</div>
+</body>
+</html>
